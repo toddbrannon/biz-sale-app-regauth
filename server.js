@@ -19,7 +19,11 @@ var MemoryStore = require('memorystore')(session)
 
 const app = express()
 
+//middleware
 app.use(express.static('public'))
+app.use(express.json())
+
+//view engine
 app.set('view engine', 'ejs')
 // app.engine('html', require('ejs').renderFile)
 
@@ -27,7 +31,7 @@ app.set('view engine', 'ejs')
 
 // database connection
 // const dbURI = process.env.MONGODB_CONN
-const dbURI = "mongodb+srv://toddb:70dd8r%40nn0n%21@trusponse.ugdwe.mongodb.net/user_db?retryWrites=true&w=majority"
+const dbURI = process.env.MONGODB_CONN
 mongoose.connect(dbURI)
     .then(() => console.log('connected to mongodb'))
     .then((result) => app.listen(port, () => {
