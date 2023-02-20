@@ -124,27 +124,73 @@ module.exports.signup_post = async (req, res) => {
  
 }
 
-
 module.exports.register_free_post = async (req, res) => {
-  const { name, email, password } = req.body;
+  let { name, email, password } = req.body;
+  name = name.trim();
+  email = email.trim();
+  password = password.trim();
+  if (name == "" || email =="" || password == "") {
+    res.json({
+      status: "FAILED",
+      message: "Empty input fields"
+    })
+  } else if (!/^[a-zA-Z ]*$/.test(name)) {
+    res.json({
+      status: "FAILED",
+      message: "Invalid name entered"
+    })
+  } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)){
+    res.json({
+      status: "FAILED",
+      message: "Invalid email entered"
+    })
+  } else if (password.length < 8) {
+    res.json({
+      status: "FAILED",
+      message: "Password must be at least 8 characters"
+    })
+  } else {
+    // Checking if User already exists
+    User.find({email}).then(result => {
+      if(result.length) {
+        // A user with that email already exists
+        res.json({
+          status: "FAILED",
+          message: "A user with that email already exists!"
+        })
+      } else {
+        // Try to create new user
+
+        //================================================================================================================================================================================
+         try {
+           const user = User.create({ name, email, password, subscription_level });
+           const token = createToken(user._id);
+
+           res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 }); // httpOnly: true for dev; need to add secure: true for prod;
+           res.status(201).json({ user_id: user._id, 
+             user_name: user.name,
+             user_email: user.email, 
+             user_pw: user.password,
+             user_sub: subscription_level
+            });
+         }
+         catch(err) {
+           const errors = handleErrors(err);
+           res.status(400).json({ errors });
+         }
+        }
+        //=========================================================================================================================================================
+
+    }).catch(err => {
+      console.log(err)
+      res.json({
+        status: "FAILED",
+        message: "An error occurred while checking for an existing user!"
+      })
+    })
+  }
   const subscription_level = 'free';
 
-  try {
-    const user = await User.create({ name, email, password, subscription_level });
-    const token = createToken(user._id);
-    res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 }); // httpOnly: true for dev; need to add secure: true for prod;
-    res.status(201).json({ user_id: user._id,
-      user_name: user.name,
-      user_email: user.email, 
-      user_pw: user.password,
-      user_sub: subscription_level 
-    });
-  }
-  catch(err) {
-    const errors = handleErrors(err);
-    res.status(400).json({ errors });
-  }
-}
   
 module.exports.register_premium_post = async (req, res) => {
   const { name, email, password } = req.body;

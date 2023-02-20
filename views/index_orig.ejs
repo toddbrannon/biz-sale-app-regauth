@@ -1,4 +1,8 @@
 <h1>Landing Page</h1>
 
 <link data-minify="1" href="https://www.bacancytechnology.com/blog/wp-content/cache/min/1/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css?ver=1675849040" rel="stylesheet" type="text/css" >
-
+<% if(message.success){ %>
+<div class="alert alert-success" role="alert">
+    <%= message.success %>
+</div>
+<% } %>
