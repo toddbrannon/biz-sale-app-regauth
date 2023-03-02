@@ -19,7 +19,7 @@ router.use(session({
 
 router.use(flash())
 
-router.get('/', authController.index_get);
+// router.get('/', authController.index_get);
 router.get('/signup', authController.signup_get);
 router.post('/signup', authController.signup_post);
 router.get('/register-free', authController.register_free_get);

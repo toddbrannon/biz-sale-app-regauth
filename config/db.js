@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+mongoose.set('strictQuery', true);
+
 // database connection
 const dbURI = process.env.MONGODB_CONN
 mongoose.connect(dbURI)

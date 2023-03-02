@@ -73,10 +73,10 @@ const createToken = (id) => {
 }
 
 // controller actions
-module.exports.index_get = (req, res) => {
-  // res.flash('success', 'This is your success message!')
-  res.render('index');
-}
+// module.exports.index_get = (req, res) => {
+//   // res.flash('success', 'This is your success message!')
+//   res.render('index');
+// }
 
 module.exports.signup_get = (req, res) => {
   res.render('signup');
@@ -133,11 +133,11 @@ module.exports.register_free_post = async (req, res) => {
     const user = await User.create({ name, email, password, subscription_level });
     const token = createToken(user._id);
     res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 }); // httpOnly: true for dev; need to add secure: true for prod;
-    res.status(201).json({ user_id: user._id,
-      user_name: user.name,
-      user_email: user.email, 
-      user_pw: user.password,
-      user_sub: subscription_level 
+    res.status(201).json({ user_id: user._id
+      // user_name: user.name,
+      // user_email: user.email, 
+      // user_pw: user.password,
+      // user_sub: subscription_level 
     });
   }
   catch(err) {

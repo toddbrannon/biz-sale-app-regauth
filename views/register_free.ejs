@@ -162,11 +162,10 @@
       console.log(data);
       if (data.errors) {
         emailError.textContent = data.errors.email;
-        passwordError.textContent = data.errors.password;
+        passwordError.textContent = data.errors.password; 
       }
       if (data.user) {
-        //location.assign('/');
-        console.log('This is data dot user if section!')
+        location.assign('/');
       }
     } 
     catch(err) {
@@ -174,5 +173,7 @@
     }
   })
 </script>
+
+
 </body>
 </html>

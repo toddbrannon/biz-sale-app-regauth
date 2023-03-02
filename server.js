@@ -15,7 +15,7 @@ require('./config/db')
 
 require('dotenv').config();
 
-const port = process.env.PORT || 8888;
+const port = process.env.PORT || 5000;
 
 var MemoryStore = require('memorystore')(session)
 
@@ -31,16 +31,15 @@ app.set('view engine', 'ejs')
 // ==========================================================================
 // app.get("*", checkUser);
 // app.get('/protected', requireAuth, (req, res) => res.render('protected'));
-app.use(authRoutes);app.use(authRoutes);
 // ===========================================================================
 
 app.use(express.urlencoded({extended: false}))
 app.use(flash())
-// app.use(session({
-//     secret: process.env.SESSION_SECRET,
-//     resave: false, // We wont resave the session variable if nothing is changed
-//     saveUninitialized: false
-// }))
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false, // We wont resave the session variable if nothing is changed
+    saveUninitialized: false
+}))
 app.use(passport.initialize()) 
 app.use(passport.session())
 app.use(methodOverride("_method"))
@@ -61,7 +60,9 @@ app.use(cookieParser());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 
-
+// routes
+app.get('/', (req, res) => res.render('index'));
+app.use(authRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -73,4 +74,6 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
     console.log(`App listening on port ${port}`);
 });
+
+
 
